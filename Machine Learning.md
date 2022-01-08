@@ -17,11 +17,11 @@ Overfitting can happen because of **noise** or **lack of representative instance
 We can distinguish **4 types of data** in normal datasets:
 
 - Categorical
-  - Nominal: non-orderable --> allows any one-to-one correspondence
-  - Ordinal: orderable --> allows any order preserving transformation
+  - Nominal: non-orderable $\rightarrow$ allows any one-to-one correspondence
+  - Ordinal: orderable $\rightarrow$ allows any order preserving transformation
 - Numerical
-  - Interval: having meaningful differences but just + and - --> allows linear function transformations
-  - Ratio: having a definition of 0 and allowing mathematical operations --> allows any mathematical function, like standardization
+  - Interval: having meaningful differences but just + and $\rightarrow$ allows linear function transformations
+  - Ratio: having a definition of 0 and allowing mathematical operations $\rightarrow$ allows any mathematical function, like standardization
 
 We can cite 4 main problems in datasets: **noise/outliers**, **missing values**, **duplicates**, **inconsistencies**.
 
@@ -107,12 +107,18 @@ $$
 
 - Here, the inner nodes contain a test that directs to either subtree, while the leaves predict a class.
 
+- There are several pros: they are explainable, they do not have any assumptions on the distribution of data, and they handle collinearity efficiently
+
+- There are several cons too:they have high variance and can create complex models, they are sensitive to outliers, they are prone to errors in many-class classification
+
 - When generating the tree, if all the elements belong to a class `c` we generate a leaf, otherwise **choose a test based on a single attribute** and generate an inner node
 
 - We could use **specific entropy** to decide the attribute to test
   - Entropy tells us the similarity of the probabilities of the classes: high entropy means that the probability are mostly similar: $H(X)=-\sum_{j} p_{j} \log _{2}\left(p_{j}\right)$
   - Specific entropy $H(Y \mid X=v)$ just tells the entropy only considering the rows in which $X=v$
   - We can then introduce **Information Gain**, measuring the amount of insight that $X$ provides to forecast $Y$: $I G(Y \mid X)=H(Y)-H(Y \mid X)$
+  - The amount of Information Gain for one random variable $(Y)$ is the decrease of uncertainty given observation from other existing variables $(X)$.
+  - This algorithm is known as **ID3**
 - Other available tests exploit the **Gini Index** and the **Misclassification Error**
 - We can **prune** DTs after the generation, with a **validation set**, **statistical pruning** (applying statistical tests on nodes) or using the **Minimum Description Length** principle, measuring the complexity of the encoding compared with the misclassifications.
 
@@ -152,6 +158,16 @@ One of the simplest models: it keeps all the training data, and future predictio
 ## Regression
 
 See the [Statistics](Statistics) chapter for more.
+
+### Logistic regression
+
+Unlike linear regression, logistic regression is used to solve **classification** problems. As classification problems should output a class probability, we introduce the **sigmoid function**: $f(x)=\frac{1}{1+e^{-x}}$. We can rewrite the logistic regression as $f(x)=\frac{1}{1+e^{-w^Tx}}$. Another reason to use logistic regression in classification problems is that it is always nominal rather than cardinal: there's no ordering of results. To optimize this, we use **gradient descent** and maximize the log-likelihood $\frac{1}{N} \sum_{i=1}^{N}\left(y_{i} \ln (p)+\left(1-y_{i}\right) \ln (1-p)\right)$. Exploiting the derivative of the sigmoid, we get our final update rule:
+
+$$
+w_{i+1}=w_{i}-\text { Learning Rate } * \nabla J(w)
+$$
+
+where $\nabla J(w)=\frac{1}{N} \sum_{i=1}^{N}\left(\left(p-y_{i}\right) x_{i}\right)$.
 
 ### Gaussian Process Regression
 
@@ -259,51 +275,3 @@ svd.fit(data)
 # apply transform to dataset
 transformed = svd.transform(data)
 ```
-
-## Deep Learning
-
-### Optimizers
-
-### Avoiding overfitting
-
-### Dropouts
-
-### Regularization
-
-### Common structures
-
-#### CNN
-
-#### RNN
-
-#### LSTM
-
-## Reinforcement Learning
-
-### Formalization
-
-### Markov Chains
-
-### Markov Decision Processes
-
-### Poisson Equations
-
-### Bellman equations
-
-### Monte Carlo Tree Search
-
-### Temporal Differencing
-
-### SARSA
-
-### Q-learning
-
-#### DQN
-
-#### Using target networks
-
-#### Experience replay
-
-#### Prioritized Experience Replay
-
-###
