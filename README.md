@@ -2,6 +2,8 @@
 
 This started as an interview cheatsheet, but it is slowly becoming a bible for ML engineers. You can find some basics of probability theory, statistics, Python, Machine Learning, Deep Learning and Reinforcement Learning.
 
+## How to read this
+It is crucial to open this with either [Typora](https://typora.io) or [Visual Studio Code](https://code.visualstudio.com): normal markdown editors won't parse the LaTeX formulas.
 <!-- CONTRIBUTING -->
 
 ## Contributing
