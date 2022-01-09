@@ -1,8 +1,6 @@
-# Simmy's interview bible
+# ML Engineer Summary
 
-This should be used for a quick revise before coding interviews, as a list of things you should study, as whatever. Feel free. It still is a Work in Progress, most things are missing 🥴.
-
-Take a look at [Machine Learning]() for some info on ML!
+This started as an interview cheatsheet, but it is slowly becoming a bible for ML engineers. You can find some basics of probability theory, statistics, Python, Machine Learning, Deep Learning and Reinforcement Learning.
 
 <!-- CONTRIBUTING -->
 ## Contributing
