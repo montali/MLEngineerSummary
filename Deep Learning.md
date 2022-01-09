@@ -114,6 +114,92 @@ Instead of computing the updates on the whole dataset, we can just split the dat
 
 ### Momentum
 
+Using **exponentially weighted averages**, we're introducing weighting factors that decrease exponentially. This means that the weighting for each older datum decreases exponentially, though never to zero. This is used for the concept of **momentum**: imagine a ball rolling down the gradient slope, it will gain momentum as it goes down.
+We are basically averaging the past updates to the parameters, using them to have some kind of momentum.
+
+$$
+\begin{aligned}
+\text { update }_{t} &=\gamma \cdot \text { update }_{t-1}+\eta \nabla w_{t} \\
+w_{t+1} &=w_{t}-\text { update }_{t}
+\end{aligned}
+$$
+
+This means that in regions having gentle slopes, we're still able to move fast. We can then introduce the **bias correction**, which is a technique that helps us to converge faster and more accurately. This happens because we normally set $V(0)=0$, meaning that the accuracy suffers at the start. Because of this, we instead compute $v(t)$ as:
+
+$$
+v(t) = \frac{\beta v(t-1) + (1-\beta)\theta(t)}{1-\beta^t}
+$$
+
+**Nesterov Momentum** is a technique that computes the gradient using the previous update, and then uses the current update to compute the next one. This is done to avoid local minima.
+
+**AdaGrad** (Adaptive Gradient) solves a problem that lies in the data: it can happen that features may be dense/sparse, making their updates faster or slower. AdaGrad introduces a different learning rate for each different feature, at each different iteration. It adapts the learning rate to the parameters, performing smaller updates for parameters associated with frequent features, and larger updates for parameters associated with rare features. Basically, the learning rate decays with respect to the update history, accumulating the squared gradients:
+
+$$
+\begin{gathered}
+G_{i, t}=\sum_{n=0}^{t} g_{i, n}^{2} \\
+\theta_{i, t+1}=\theta_{i, t}-\frac{\eta}{\sqrt{G_{i, t}+\epsilon}} g_{i, t}
+\end{gathered}
+$$
+
+**RMSProp** is used to perform larger updates on the weights, as it uses the square root of the sum of the squared gradients. We know $dW^2$ to be large, and $db^2$ to be small, so we can use this to tweak the updates:
+
+$$
+\begin{gathered}
+	sdW = (\beta * sdW) + (1 - \beta) * dW^2 \\
+	sdb = (\beta * sdb) + (1 - \beta) * db^2\\
+    W = W - learning_{rate} * dW / sqrt(sdW)\\
+	b = B - learning_{rate} * db / sqrt(sdb)
+\end{gathered}
+$$
+
+**Adam**, standing for adaptive moment estimation, is a technique that mixes RMSprop and momentum. It computes $vdW$ and $vdb$ as in the momentum technique, $sdW$ and $sdb$ as in the RMSprop technique, fixes the biases and then computes the updates.
+It has 3 parameters, being $\epsilon$ the small constant, $\beta_1$ and $\beta_2$ the exponential decay rates for momentum and RMSprop, respectively.
+The pseudocode is the following:
+
+```
+vdW = 0, vdW = 0
+sdW = 0, sdb = 0
+on iteration t:
+	# can be mini-batch or batch gradient descent
+	compute dw, db on current mini-batch
+
+	vdW = (beta1 * vdW) + (1 - beta1) * dW     # momentum
+	vdb = (beta1 * vdb) + (1 - beta1) * db     # momentum
+
+	sdW = (beta2 * sdW) + (1 - beta2) * dW^2   # RMSprop
+	sdb = (beta2 * sdb) + (1 - beta2) * db^2   # RMSprop
+
+	vdW = vdW / (1 - beta1^t)      # fixing bias
+	vdb = vdb / (1 - beta1^t)      # fixing bias
+
+	sdW = sdW / (1 - beta2^t)      # fixing bias
+	sdb = sdb / (1 - beta2^t)      # fixing bias
+
+	W = W - learning_rate * vdW / (sqrt(sdW) + epsilon)
+	b = B - learning_rate * vdb / (sqrt(sdb) + epsilon)
+```
+
+Finaly, we can use **learning rate decay** to reduce the learning rate as we get closer to our optimum. This is done by multiplying the learning rate by a factor $\eta_0$ that decays exponentially. When dealing with neural networks, it's rare to end up in local optima: it's much more possible, though, to end up in plateaus, i.e. regions where the derivative is close to zero for a long time. Momentum algorithms help in these situations.
+
+### Hyperparameter tuning and normalization
+
+Tuning the hyperparameters is a crucial step for any neural network. The order of importance is something along the lines of:
+
+- Learning rate.
+- Momentum beta.
+- Mini-batch size.
+- No. of hidden units.
+- No. of layers.
+- Learning rate decay.
+- Regularization lambda.
+- Activation functions.
+- Adam beta1, beta2 & epsilon.
+
+Don't tune with a grid, it's better to use a random search and narrow down when we found decent solutions. Furthermore, it's better to search using a logarithmic scale rather than a linear one. We have two approaches for hyperparameter tuning: the **panda** approach, in which we nudge the parameters a little during training, with one training at a time, or the **caviar** technique, running multiple model in parallel and checking the results in the end.
+
+**Batch normalization** is a technique that speeds up learning by normalizing the outputs from neural layers. This is usually done before the activation function, but it can also be done after it. It's usually applied with mini-batches. Note that if we're using this, the bias in the network gets removed when we subtract the mean. The technique works because it reduces the problem fo input values changing, regularizing the network and adding some noise similarly to dropout. Bigger batch sizes will reduce this effect. Don't rely on this technique as a regularization, you should still use L2 or Dropout.
+When then using the network to predict one single example, we'll need to estimate mean and variance better than computing it on a single element. This is usually managed by the libraries.
+
 ### Avoiding overfitting
 
 ### Dropouts
