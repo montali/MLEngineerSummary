@@ -197,19 +197,112 @@ Tuning the hyperparameters is a crucial step for any neural network. The order o
 
 Don't tune with a grid, it's better to use a random search and narrow down when we found decent solutions. Furthermore, it's better to search using a logarithmic scale rather than a linear one. We have two approaches for hyperparameter tuning: the **panda** approach, in which we nudge the parameters a little during training, with one training at a time, or the **caviar** technique, running multiple model in parallel and checking the results in the end.
 
-**Batch normalization** is a technique that speeds up learning by normalizing the outputs from neural layers. This is usually done before the activation function, but it can also be done after it. It's usually applied with mini-batches. Note that if we're using this, the bias in the network gets removed when we subtract the mean. The technique works because it reduces the problem fo input values changing, regularizing the network and adding some noise similarly to dropout. Bigger batch sizes will reduce this effect. Don't rely on this technique as a regularization, you should still use L2 or Dropout.
+**Batch normalization** is a technique that speeds up learning by normalizing the outputs from neural layers. This is usually done before the activation function, but it can also be done after it. It's usually applied with mini-batches. Note that if we're using this, the bias in the network gets removed when we subtract the mean. The technique works because it reduces the problem to input values changing, regularizing the network and adding some noise similarly to dropout. Bigger batch sizes will reduce this effect. Don't rely on this technique as a regularization, you should still use L2 or Dropout.
 When then using the network to predict one single example, we'll need to estimate mean and variance better than computing it on a single element. This is usually managed by the libraries.
 
-### Avoiding overfitting
+## Convolutional Neural Networks
 
-### Dropouts
+As computer vision is one of the applications that are growing faster, we're interested in building layers that are optimal for 2D images.
+Convolutions are the basic operations that we'll use to build CNNs: we're basically shifting the kernel over the image, and then multiplying it by the image.
+Notice that with the kernel being shifted, we also need some kind of padding in order to avoid reducing the size of the image over and over. Generally speaking, if a matrix $n\times n$ is convoluted by a $f\times f$ kernel, the result is $n-f+1 \times n-f+1$. Often, the padding value is just composed by zeros. The **same convolution padding** is a padding such that $p = (f-1)/2$. $f$ is usually odd, in order to have a central value. **Strided convolutions** shift the kernel by $s$ pixels. Notice that in order to process RGB pictures, we'll need to be able to process 3D input. This is done by introducing a **stacked convolution**, where we stack the convolutions on top of each other.
 
-### Regularization
+In addition to that, we usually use **Pooling layers**, that reduce the size of the data. MaxPooling is the most common one, and it's done by taking the maximum value of the submatrix. AveragePooling takes the average.
 
-### Common structures
+### ResNets
 
-#### CNN
+ResNets are a family of deep neural networks that are designed to be more efficient than traditional CNNs. They are usually composed of several layers, and the first one is a convolutional layer. The second one is a residual layer, which adds the output of the first layer to the output of the second layer. This is done several times, and the output of the last layer is the output of the network. This is an example of **Skip-connections**: the output of the first layer is added to the output of the second layer, and the output of the second layer is added to the output of the third layer, and so on. These networks can go deeper and deeper without incurring in vanishing gradients.
 
-#### RNN
+### Other networks
 
-#### LSTM
+**Inception** was proposed by introducing multiple convolution kernels in a single step, and letting the algorithm learn the best.
+
+## Sequential models
+
+Many types of data are indeed _sequential_: we need the data that was analysed in the past to understand the current one.
+
+### Notation
+
+In the past section, we'll index the first element of $x$ as $x^{<1>}$, the second as $x^{<2>}$, and so on. $T_x$ is the number of elements in $x$. $x^{(i)<t>}$ is the element $t$ of input vector $i$. Clearly, $T_x^{(i)}$ is the input sequence length of training example $i$.
+
+### Vectorising words
+
+We can build a vocabulary containing all the words in our training set. Often, we just need to represent the most occurring ones: we can add an `<UNK>` token to the vocabulary, and we can use it to represent all the words that are not in the vocabulary.
+
+### Recurrent Neural Networks
+
+Why can't we just use a normal neural network? There are two problems: the inputs and outputs have no standard length, and features are not shared across different positions of the text sequence. The latter means that if I have a word that's repeating ten times, the ten repetitions will be different from each other.
+In a RNN, every time we have an output, we can use it as an input for the next time step. This is called a **recurrent layer**. There are 3 weight matrices now:
+
+- The first one is the **input-to-hidden** matrix, $W_{ax}: (N_{hidden\_neurons}, n_x)$
+- The second one is the **hidden-to-hidden** matrix, $W_{aa}: (N_{hidden\_neurons}, N_{hidden\_neurons})$
+- The third one is the **hidden-to-output** matrix, $W_{ya}: (n_y, N_{hidden\_neurons})$
+  Now, the forward pass is computed as follows:
+  $$
+  a^{<1>} = g_1(W_{aa} a^{<0>} + W_{ax} x^{<1>} + b_a)\\
+  \hat{y}^{<1>}= g_2(W_{ya} a^{<1>} + b_y)\\
+  a^{<t>} = g(W_{aa} a^{<t-1>} + W_{ax} x^{<t>} + b_a)\\
+  \hat{y}^{<t>}= g(W_{ya} a^{<t>} + b_y)
+  $$
+  Generally, $g_1$ is a $tanh/ReLU$ activation function, and $g_2$ is a $sigmoid$ or $softmax$ activation function.
+  Usually, to perform backpropagation, we use the cross-entropy loss function:
+  $$
+  \begin{aligned}
+  &\mathcal{L}\left(\hat{y}^{\langle t\rangle}, y^{\langle t\rangle}\right)=-\sum_{i} y_{i}^{\langle t\rangle} \log \hat{y}_{i}^{\langle t\rangle} \\
+  &\left.\mathcal{L}=\sum \mathcal{L}^{\langle t\rangle} \hat{y}^{\langle t\rangle}, y^{\langle t\rangle}\right)
+  \end{aligned}
+  $$
+
+### Language models
+
+A **language model** is a model that predicts the next word in a sequence. It's usually trained with a sequence of words, and the model predicts the probabilities for the next word. We just get a training set of target language text, tokenize this by getting the vocabulary and one-hot each word, add `<EOS>` and `<UNK>` tokens.
+To predict a whole sentence's probability, we feed one word at a time and multiply the probabilities.
+
+To **sample novel sequences**, we can just pick a random first word from the distribution obtained by $y^{<1>}$, then pick the next word according to the distribution obtained by $y^{<t>}$.
+
+**Character-level language models** are a special case of language models, where the input is a sequence of characters: these tend to create longer sequences and are not as good at capturing long range dependencies.
+
+### Vanishing gradients
+
+As every deep neural network, RNN are subject to **vanishing gradients**. This means that RNNs are not good in long-term dependencies. **Gradient clipping** (i.e. deciding a maximum for gradients) can solve the exploding gradient problem, while a weight initialization (e.g. He) and echo state networks (i.e. RNNs with recurrent dropout) can help to avoid vanishing gradients. The most popular solution, though, is using **GRU/LSTM networks**.
+
+### Gated Recurrent Unit (GRU)
+
+GRUs introduce a **memory cell** that is updated at every time step. This cell is used to remember the output of the previous time step: $C^{<t>} = a^{<t>}$. The _update gate_ decides whether to update the memory cell or not. If the update gate is $1$, the memory cell is updated with the output of the current time step, if $0$ it will just be the previous. The update then works as follows:
+
+$$
+\tilde{C}^{<t>} = tanh(W_a[c^{<t-1>}]+b_a)\\
+\Gamma_{u} = \sigma(W_u[c^{<t-1>}, x^{<t>}]+b_u)\\
+C^{<t>} = \Gamma_{u} \cdot \tilde{C}^{<t>} + (1-\Gamma_{u}) \cdot C^{<t-1>}
+$$
+
+With the update usually being a small number (in the order of $10^{-5}$), GRUs don't suffer from vanishing gradients. This makes the equation $C^{<t>}=C^{<t-1>}$ often times.
+So, the shapes are as follows:
+
+- $a^{<t>}$: (N\_{hidden_neurons}, 1)
+- $c^{<t>}$: (N\_{hidden_neurons}, 1)
+- $\tilde{c}^{<t-1>}$: (N\_{hidden_neurons}, 1)
+- $u^{<t>}$: (N\_{hidden_neurons}, 1)
+  This was true for the **simplified GRU**, but the **full GRU** introduces a new gate, telling us _how relevant the previous memory cell is_.
+  We'll call this the **relevance gate**:
+  $$
+  \Gamma_{r}=\sigma\left(W_{r}\left[c^{\langle t-1\rangle}, x^{(t)}\right]+b_{r}\right)
+  $$
+
+### Long Short Term Memory (LSTM)
+
+LSTMs have 3 different gates: an **update** gate, a **forget** gate and an **output** gate.
+![LSTM structure](./res/LSTM.png)
+
+### Bidirectional RNN
+
+Some sentences need information from both the past and the future. For example, the sentence "I love you" needs information from both the past and the future. BiRNNs solve this issue by having activations that come from both left and right. BiRNN with LSTM appear to be commonly used, but you obviously need the whole sequence before you can process it: this is not optimal in, for example, live speech recognition.
+
+### Deep RNNs
+
+Sometimes, stacking multiple RNN layers is powerful. In feed-forward deep nects, there could be even 200 layers, while in deep RNNs having 3 is already deep and expensive.
+
+## Word Embeddings
+
+Word embeddings are a way to represent words in a vector space. This is useful for tasks like text classification, where words are represented by a vector space. Up until now, we used a vocabulary, but this is not optimal: we would like to encode the relationship between words, for example between king and queen.
+Algorithms used to generate word embeddings examine unlabeled text and learn the representation. Word embeddings tend to make an extreme difference with smaller datasets, and they reduce the size of the input from a one-hot vector to a vector of features. Word embedding technology has even been used for face recognition, being able to analyze similarity.
+Word embeddings can be used to analyze analogies: by computing the vector difference between 2 words, you can check whether the difference between them is similar to the one between 2 other words by computing their Cosine Similarity.
