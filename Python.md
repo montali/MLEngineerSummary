@@ -4,6 +4,15 @@ Here you can find some implementation details for Python, which usually turn out
 
 ## Data structures
 
+### Mutable vs Immutable
+
+A first, crucial distinction is that in Python we both have mutable and immutable objects. The first can change their state. Most built-in types are immutable: int, float, bool, str, tuple, unicode. The built-in mutable types are list, dict, set.
+![Mutable and immutable data types](res/MutableImmutable.png)
+Note that identifiers for immutable data types point to the same object, if they have the same value. `int(5) is int(5)` is `True`.
+Note that the **bindings** are always mutable: an immutable object can be substituted using the same binding.
+Note that when passing variables to functions, immutable objects are _passed by value_, while mutable objects are _passed by reference_: if you pass a list to a function and edit it in the function, the list is changed outside too.
+Note that mutability is not transitive: if we have a tuple of lists, we can change the content of the lists.
+
 ### Lists
 
 - Lists are dynamically resized: a `tuple` differs from a list from the fact that it is **immutable**

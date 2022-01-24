@@ -4,7 +4,7 @@
 
 ### Overfitting
 
-**Overfitting** happens when the leraning is affected by noise: the performance on the test set is way worse than that on the training set. A hypothesis $h$ overfits the dataset if there exists another hypothesis $h'$ such that:
+**Overfitting** happens when the learning is affected by noise: the performance on the test set is way worse than that on the training set. A hypothesis $h$ overfits the dataset if there exists another hypothesis $h'$ such that:
 
 $$
 \begin{aligned} \text { error }_{\text {train }}(h) &<\text { error }_{\text {train }}\left(h^{\prime}\right) \\ \operatorname{error}_{\mathcal{E}}(h) &>\operatorname{error}_{\mathcal{E}}\left(h^{\prime}\right) \end{aligned}
@@ -27,9 +27,9 @@ We can cite 4 main problems in datasets: **noise/outliers**, **missing values**,
 
 ### Partitioning
 
-To compute errors significantly, we should split the dataset into **traning set** (used to generate the model) and **test set**, used to compute the _test set error_. We can add a **validation set**, that will allow us to evaluate the model (for example after pruning or hyperparameter tuning) for tuning, which will then be followed by the test set.
+To compute errors significantly, we should split the dataset into **training set** (used to generate the model) and **test set**, used to compute the _test set error_. We can add a **validation set**, that will allow us to evaluate the model (for example after pruning or hyperparameter tuning) for tuning, which will then be followed by the test set.
 
-We define the training/test and training/validation/test splits as **Holdout**. An alternative is represented by **Cross Validation** (k-fold), which randomly partitions the training set in $k$ subsets, and performs $k$ iterations uysing one of the subsets for test and the others for training. The results of tests are merged, and the final model is generated using the entire training set.
+We define the training/test and training/validation/test splits as **Holdout**. An alternative is represented by **Cross Validation** (k-fold), which randomly partitions the training set in $k$ subsets, and performs $k$ iterations using one of the subsets for test and the others for training. The results of tests are merged, and the final model is generated using the entire training set.
 
 ![kfold](./res/kfold.png)
 
@@ -37,15 +37,20 @@ We define the training/test and training/validation/test splits as **Holdout**. 
 
 ### Numpy
 
-WIP
+Python was not designed for numeric computation. Numpy was created to provide a high-performance multidimensional array library. A numpy array is a collection of similar data-type elements, stored in a contiguous memory block. A list is instead just an array of pointer to objects. Numpy is parallel, dividing tasks into chunks and processing them at the same time. It is implemented in C. For example, when used to compute the dot product of two vectors, it is faster by 10-fold.
 
 ### Pandas
 
-WIP
+Pandas was born to deal with huge datasets to perform data manipulation and statistical analysis. We can import a CSV dataset using `pd.read_csv()` and then use the `.head()` method to display the first 5 rows.
+Each DataFrame has `columns`. Note that when you're importing a dataset having no column names, you'll have to use `pd.read_csv(..., header=None)`.
+You can read a column using `df['column_name']` or `df.column_name`.
 
 ### TensorFlow
 
-WIP
+TensorFlow is a deep learning library created by Google, providing a high-level API, primitives and tools for building and training neural networks. It is implemented in Python.
+Tensors are multilinear maps from vector spaces to the real numbers. TF is actually similar to NumPy, but offers automatic derivatives and tensor functions.
+A nice summary of TF is available [here](https://cs224d.stanford.edu/lectures/CS224d-Lecture7.pdf).
+A practical cheatsheet is found [here](https://github.com/patrickphat/Tensorflow-2-cheatsheet/blob/master/tf-cheatsheet.md).
 
 ## Classification
 
@@ -109,7 +114,7 @@ $$
 
 - There are several pros: they are explainable, they do not have any assumptions on the distribution of data, and they handle collinearity efficiently
 
-- There are several cons too:they have high variance and can create complex models, they are sensitive to outliers, they are prone to errors in many-class classification
+- There are several cons too: they have high variance and can create complex models, they are sensitive to outliers, they are prone to errors in many-class classification
 
 - When generating the tree, if all the elements belong to a class `c` we generate a leaf, otherwise **choose a test based on a single attribute** and generate an inner node
 
@@ -233,7 +238,7 @@ Here, we estimate the parameters of a statistical model to maximize the ability 
 
 ## Feature selection
 
-To reduce the complexity of models and computation, we should try to reduce the features we have as input. The **significance** of attributes can vcary, as we may have **irrelevant alteration** or **redundancies**.
+To reduce the complexity of models and computation, we should try to reduce the features we have as input. The **significance** of attributes can vary, as we may have **irrelevant alteration** or **redundancies**.
 
 We have to distinguish between **unsupervised** and **supervised** methods (considering the relationship between attribute and class, like _filter methods_).
 

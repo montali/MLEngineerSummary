@@ -54,7 +54,7 @@ X3  /
 
 ### Activation functions
 
-The sigmoid was the first activation function, very commonly used at the beginning. It though turns out that it can lead to small updates in the weights. A second fuction is the $tanh$, having a range $[-1,1]$, which, having mean $0$, turns out to be more stable. This, though, still suffers from the same problem the Sigmoid has: when the input is too large or too small, the gradient will be too small as the slope will be around zero. The **ReLU** function is a nonlinear function that has a range $[0,\infty)$ and a mean of $0$, and it solves this problem. It's defined as $ReLU(x) = \max(0,x)$. Generally, when dealing with classification problems, we use the **ReLU** function for the hidden layers and a sigmoid or a softmax for the output layer. Note that we're adding non-linearities to _squash_ the space in order to better find patterns. If we didn't add non-linearities, whatever number of layers we had, we could always simplify to a logistic regressor.
+The sigmoid was the first activation function, very commonly used at the beginning. It though turns out that it can lead to small updates in the weights. A second function is the $tanh$, having a range $[-1,1]$, which, having mean $0$, turns out to be more stable. This, though, still suffers from the same problem the Sigmoid has: when the input is too large or too small, the gradient will be too small as the slope will be around zero. The **ReLU** function is a nonlinear function that has a range $[0,\infty)$ and a mean of $0$, and it solves this problem. It's defined as $ReLU(x) = \max(0,x)$. Generally, when dealing with classification problems, we use the **ReLU** function for the hidden layers and a sigmoid or a softmax for the output layer. Note that we're adding non-linearities to _squash_ the space in order to better find patterns. If we didn't add non-linearities, whatever number of layers we had, we could always simplify to a logistic regressor.
 
 ### Random initialization
 
@@ -281,8 +281,8 @@ So, the shapes are as follows:
 - $a^{<t>}$: (N\_{hidden_neurons}, 1)
 - $c^{<t>}$: (N\_{hidden_neurons}, 1)
 - $\tilde{c}^{<t-1>}$: (N\_{hidden_neurons}, 1)
-- $u^{<t>}$: (N\_{hidden_neurons}, 1)
-  This was true for the **simplified GRU**, but the **full GRU** introduces a new gate, telling us _how relevant the previous memory cell is_.
+- $u^{<t>}$: (N\_{hidden*neurons}, 1)
+  This was true for the **simplified GRU**, but the **full GRU** introduces a new gate, telling us \_how relevant the previous memory cell is*.
   We'll call this the **relevance gate**:
   $$
   \Gamma_{r}=\sigma\left(W_{r}\left[c^{\langle t-1\rangle}, x^{(t)}\right]+b_{r}\right)
@@ -306,3 +306,4 @@ Sometimes, stacking multiple RNN layers is powerful. In feed-forward deep nects,
 Word embeddings are a way to represent words in a vector space. This is useful for tasks like text classification, where words are represented by a vector space. Up until now, we used a vocabulary, but this is not optimal: we would like to encode the relationship between words, for example between king and queen.
 Algorithms used to generate word embeddings examine unlabeled text and learn the representation. Word embeddings tend to make an extreme difference with smaller datasets, and they reduce the size of the input from a one-hot vector to a vector of features. Word embedding technology has even been used for face recognition, being able to analyze similarity.
 Word embeddings can be used to analyze analogies: by computing the vector difference between 2 words, you can check whether the difference between them is similar to the one between 2 other words by computing their Cosine Similarity.
+When implementing a word embedding algorithm, you end up with a **learning matrix**: this matrix will be of size `(n_words, n_features)`.
