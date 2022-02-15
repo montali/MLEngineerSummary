@@ -34,7 +34,9 @@ Note that this algorithm is not guaranteed to converge: when the data are not li
 
 ### Gradient Descent
 
-We know gradient to be a vector pointing at the greatest increase of a function: combining this concept with a **cost function**, we can find the direction in which this cost is minimized. Parametrising our cost function with respect to the model (whatever it is, a neural network, a perceptron, etc.) we can find the direction in which the cost is minimized, iteratively:
+Gradient descent is based on the observation that if a multi-variable function $F(x)$ is defined and differentiable in a neighbourhood of a point $a$, then it decreases fastest if one goes from $a$ in the direction of the negative gradient. Follows from this that, for a small enough _learning rate_, $\mathbf{a}_{n+1}=\mathbf{a}_{n}-\gamma \nabla F\left(\mathbf{a}_{n}\right)$ will be smaller than $a_n$.
+
+We therefore know gradient to be a vector pointing at the greatest increase of a function: combining this concept with a **cost function**, we can find the direction in which this cost is minimized. Parametrising our cost function with respect to the model (whatever it is, a neural network, a perceptron, etc.) we can find the direction in which the cost is minimized, iteratively:
 
 $$
 x_{n}^{(i+1)}=x_{n}^{(i)}-a \cdot \frac{\partial f}{\partial x_{n}}\left(x^{(i)}\right)
@@ -278,15 +280,17 @@ $$
 With the update usually being a small number (in the order of $10^{-5}$), GRUs don't suffer from vanishing gradients. This makes the equation $C^{<t>}=C^{<t-1>}$ often times.
 So, the shapes are as follows:
 
-- $a^{<t>}$: (N\_{hidden_neurons}, 1)
-- $c^{<t>}$: (N\_{hidden_neurons}, 1)
-- $\tilde{c}^{<t-1>}$: (N\_{hidden_neurons}, 1)
-- $u^{<t>}$: (N\_{hidden*neurons}, 1)
-  This was true for the **simplified GRU**, but the **full GRU** introduces a new gate, telling us \_how relevant the previous memory cell is*.
-  We'll call this the **relevance gate**:
-  $$
-  \Gamma_{r}=\sigma\left(W_{r}\left[c^{\langle t-1\rangle}, x^{(t)}\right]+b_{r}\right)
-  $$
+- $a^{<t>}: (N\_{hidden\_neurons}, 1)$
+- $c^{<t>}: (N\_{hidden\_neurons}, 1)$
+- $\tilde{c}^{<t-1>}: (N\_{hidden\_neurons}, 1)$
+- $u^{<t>}: (N\_{hidden\_neurons}, 1)$
+
+This was true for the **simplified GRU**, but the **full GRU** introduces a new gate, telling us how relevant the previous memory cell is.
+We'll call this the **relevance gate**:
+
+$$
+\Gamma_{r}=\sigma\left(W_{r}\left[c^{\langle t-1\rangle}, x^{(t)}\right]+b_{r}\right)
+$$
 
 ### Long Short Term Memory (LSTM)
 

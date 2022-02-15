@@ -230,7 +230,7 @@ We can then cut the **dendrogram** at the desired depth. The horizontal axis of 
 
 We might want clusters to be high-density regions separated by low-density regions. To compute density, we could either use _grid-based methods_ or _object-centered methods_. Now, a **cluster is a maximal set of points connected by density**, i.e. points linked by other points in their neighbourhoods.
 
-An alternative to **DBSCAN** is **Kernel Density Estimation**, describing the distribution of the data by a function and compute th density as the sum of the _kernel functions_ associated with each point.
+An alternative to **DBSCAN** is **Kernel Density Estimation**, describing the distribution of the data by a function and compute the density as the sum of the _kernel functions_ associated with each point.
 
 #### Model-based clustering
 
@@ -261,7 +261,7 @@ This is implemented in SciKit Learn:
 SelectKBest(chi2)
 ```
 
-**Wrapper methods** try training models using subset of features, and iteratively add/remove features. The difference between **filter** and **wrapper** methods is the first works on the data, measuring the relevance of attributes by their correlation with the dependent variable, while wrapper methods are algorithm-based. The first are way faster, but less informative.
+**Wrapper methods** try training models using subsets of features, and iteratively add/remove features. The difference between **filter** and **wrapper** methods is the first works on the data, measuring the relevance of attributes by their correlation with the dependent variable, while wrapper methods are algorithm-based. The first are way faster, but less informative.
 
 **Principal Component Analysis** **PCA** maps the whole dataset into a new space with fewer attributes. It finds an ordered set of dimensions, such that the first one captures most of the variability. Notice that this is not always what you want: for classification, it can backfire easily and should be avoided.
 
@@ -280,3 +280,26 @@ svd.fit(data)
 # apply transform to dataset
 transformed = svd.transform(data)
 ```
+
+## Transfer learning
+
+Transfer learning consists in focusing on storing knowledge gained while solving a problem, and applying it to a different but related problem. We pick a source task with a huge dataset, develop the model, then start the training of the new one with this. It gives us a higher start, a higher slope, and a higher asymptote.
+
+## Few-shot learning
+
+Few-shot learning is somewhat similar to transfer learning. Its main focus is **meta-learning**, or _learning how to learn_. It tries to build a similarity model on a bigger dataset, allowing the model to predict whether two datapoints are similar or not, then uses this to build a classifier on a really small dataset.
+
+## Hyperparameter optimization
+
+In the past, we have seen multiple approaches to hyperparameters optimization:
+
+- **Grid search**: simplest method, we simply try all the possible combinations. It is computationally expensive.
+- **Random search**: we randomly sample the hyperparameters space, and we try to find the best combination. It is computationally cheap, and stoppable whenever we want (so we can tune the accuracy we need by setting the iterations)
+- **Bayesian optimization**: we use a Bayesian method to optimize the hyperparameters. Applied to hyperparameter optimization, Bayesian optimization builds a probabilistic model of the function mapping from hyperparameter values to the objective evaluated on a validation set. By iteratively evaluating a promising hyperparameter configuration based on the current model, and then updating it, Bayesian optimization aims to gather observations revealing as much information as possible about this function and, in particular, the location of the optimum.
+- **Gradient based**: usable for certain optimizers only, we compute the gradient with respect to the hyperparameters and try to optimize it
+- **Evolutionary algorithms**: we use evolutionary computing to perform reproduction and mutation basing on the fitness of the individuals (parameter sets).
+
+# Glossary
+
+- **Feature leakage**: some features may inadvertently contain label data, resulting in a model that scores really higher in tests than in production.
+- **Hit Ratio**: metric used for recommender systems, if we have 1 test element and a _Hit Ratio @10_, it will be positive if the test element is in the first 10 ranked elements
