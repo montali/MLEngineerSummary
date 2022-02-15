@@ -158,11 +158,5 @@ The problem we solved with the target network can be solved in a smarter way: in
 Dueling DQN splits the Q-values into two different parts, the value function $V(s)$ and the advantage function $A(s,a)$. The same neural network splits its last layer in two parts. This is useful as sometimes it is unnecessary to know the exact value of each action, so just learning the state-value can be enough. To solve the _unidentifiability_ problem we have (as we don't know the value of the advantage), we subtract the maximum value of the advantage function from the advantage function, obtaining 0 for the best, and negative values for the others:
 
 $$
-
-Q(s, a)=V(s)+\left(A(s, a)-\max \_{a^{\prime} \in|\mathcal{A}|} A(s, a)\right)
-
-
-$$
-
-$$
+Q(s, a)=V(s)+\left(A(s, a)-\max_{a^{\prime} \in|\mathcal{A}|} A(s, a)\right)
 $$
