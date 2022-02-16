@@ -106,6 +106,11 @@ F_{m}(\mathrm{x}) &=F_{m-1}(\mathrm{x})+\Delta_{m}(\mathrm{x})
 \end{aligned}
 $$
 
+### AdaBoost
+
+AdaBoost, one of the first boosting methods, uses **Decision Stumps** (a decision stump is a simple classifier that splits the data into two groups, one for each class, by one feature). The stump decides a feature and a threshold.
+Two weight vectors are used: one for the classifiers, one for the examples. During training, difficult examples have higher weight. After training, each classifier is weighted by the number of examples it correctly classified. A classifier with 50% accuracy is weighted zero, a classifier with less than that is weighted negatively.
+
 ### Types of classifiers
 
 #### Decision Tree
@@ -303,3 +308,4 @@ In the past, we have seen multiple approaches to hyperparameters optimization:
 
 - **Feature leakage**: some features may inadvertently contain label data, resulting in a model that scores really higher in tests than in production.
 - **Hit Ratio**: metric used for recommender systems, if we have 1 test element and a _Hit Ratio @10_, it will be positive if the test element is in the first 10 ranked elements
+- **Multicollinearity**: features are correlated with each other, and the model is not able to learn the relationship between them.

@@ -181,7 +181,7 @@ on iteration t:
 	b = B - learning_rate * vdb / (sqrt(sdb) + epsilon)
 ```
 
-Finaly, we can use **learning rate decay** to reduce the learning rate as we get closer to our optimum. This is done by multiplying the learning rate by a factor $\eta_0$ that decays exponentially. When dealing with neural networks, it's rare to end up in local optima: it's much more possible, though, to end up in plateaus, i.e. regions where the derivative is close to zero for a long time. Momentum algorithms help in these situations.
+Finally, we can use **learning rate decay** to reduce the learning rate as we get closer to our optimum. This is done by multiplying the learning rate by a factor $\eta_0$ that decays exponentially. When dealing with neural networks, it's rare to end up in local optima: it's much more possible, though, to end up in plateaus, i.e. regions where the derivative is close to zero for a long time. Momentum algorithms help in these situations.
 
 ### Hyperparameter tuning and normalization
 
