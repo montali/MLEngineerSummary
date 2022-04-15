@@ -309,3 +309,29 @@ In the past, we have seen multiple approaches to hyperparameters optimization:
 - **Feature leakage**: some features may inadvertently contain label data, resulting in a model that scores really higher in tests than in production.
 - **Hit Ratio**: metric used for recommender systems, if we have 1 test element and a _Hit Ratio @10_, it will be positive if the test element is in the first 10 ranked elements
 - **Multicollinearity**: features are correlated with each other, and the model is not able to learn the relationship between them.
+
+## Losses
+
+**Probabilistic losses**
+
+- BinaryCrossentropy
+- CategoricalCrossentropy
+- SparseCategoricalCrossentropy
+- Poisson
+- KLDivergence
+
+**Regression losses**
+
+- MeanSquaredError
+- MeanAbsoluteError
+- MeanAbsolutePercentageError
+- MeanSquaredLogarithmicError
+- CosineSimilarity
+- Huber
+- LogCosh
+
+**Hinge losses for "maximum-margin" classification**
+
+- Hinge
+- SquaredHinge
+- CategoricalHinge
